@@ -7,8 +7,21 @@
 //
 
 import UIKit
+import AVFoundation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+    
+    // outlet and ins variables
+    @IBOutlet var preView: UIView!
+    var preViewLayer: AVCaptureVideoPreviewLayer!
+    var captureSession: AVCaptureSession!
+    var metadataOutput: AVCaptureMetadataOutput!
+    var videoDevice: AVCaptureDevice!
+    var videoInput: AVCaptureDeviceInput!
+    
+    var sendURL: String!
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
