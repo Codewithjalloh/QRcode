@@ -25,7 +25,11 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        setupCaptureSession()
+        
+        if captureSession == nil {
+        
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,7 +45,35 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         metadataOutput.metadataObjectTypes = metadataOutput.availableMetadataObjectTypes
         running = true
     }
+    
+    func stopRunning() {
+        captureSession.stopRunning()
+        running = false
+    }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.startRunning()
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.stopRunning()
+    }
+    
+    func setupCaptureSession() {
+        
+    }
+    
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+        let elemento = metadataObjects.first as? AVMetadataMachineReadableCodeObject
+        if (elemento != nil) {
+            print(elemento!.stringValue)
+            sendURL = elemento!.stringValue
+        }
+    }
 
 }
 
