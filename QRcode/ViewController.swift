@@ -73,6 +73,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         self.stopRunning()
     }
     
+    // setupCapSession function
     func setupCaptureSession() {
         if(captureSession != nil) {
             return
