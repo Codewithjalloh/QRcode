@@ -18,7 +18,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var metadataOutput: AVCaptureMetadataOutput!
     var videoDevice: AVCaptureDevice!
     var videoInput: AVCaptureDeviceInput!
-    
+    var running = false
     var sendURL: String!
     
     
@@ -31,6 +31,15 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func startRunning() {
+        if captureSession == nil {
+            return
+        }
+        captureSession.startRunning()
+        metadataOutput.metadataObjectTypes = metadataOutput.availableMetadataObjectTypes
+        running = true
     }
 
 
