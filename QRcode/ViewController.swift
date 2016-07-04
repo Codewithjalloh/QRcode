@@ -28,7 +28,18 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         setupCaptureSession()
         
         if captureSession == nil {
+            let alert = UIAlertController(title: "Camera required", message: "this device has no camera. This is an iOS Simulator", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "Got it", style: .Default, handler: nil)
+            alert.addAction(action)
+            self.presentViewController(alert, animated: false, completion: nil)
         
+        } else {
+            preViewLayer.frame = preView.bounds
+            preView.layer.addSublayer(preViewLayer)
+            
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "startRunning:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+            
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "stopRunning:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
         }
     }
 
@@ -63,6 +74,32 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func setupCaptureSession() {
+        if(captureSession != nil) {
+            return
+        }
+        videoDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        
+        if (videoDevice == nil) {
+            print("No camera on this device")
+            return
+        }
+        
+        captureSession = AVCaptureSession()
+        videoInput = (try! AVCaptureDeviceInput(device: videoDevice) as AVCaptureDeviceInput)
+        
+        if(captureSession.canAddInput(videoInput)) {
+            captureSession.addInput(videoInput)
+        }
+        preViewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        preViewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        metadataOutput = AVCaptureMetadataOutput()
+        
+        let metadataQueue = dispatch_queue_create("com.example.QRCode.metadata", nil)
+        metadataOutput.setMetadataObjectsDelegate(self, queue: metadataQueue)
+        
+        if(captureSession.canAddOutput(metadataOutput)) {
+            captureSession.addOutput(metadataOutput)
+        }
         
     }
     
